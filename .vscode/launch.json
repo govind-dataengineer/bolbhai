@@ -1,0 +1,64 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:bolBhAI}",
+            "name": "Debug bolbhai-benchmark",
+            "target": "bolbhai-benchmark",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug bolbhai-benchmark"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:bolBhAI}",
+            "name": "Release bolbhai-benchmark",
+            "target": "bolbhai-benchmark",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release bolbhai-benchmark"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:bolBhAI}",
+            "name": "Debug BolBhAI",
+            "target": "BolBhAI",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug BolBhAI"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:bolBhAI}",
+            "name": "Release BolBhAI",
+            "target": "BolBhAI",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release BolBhAI"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:bolBhAI}",
+            "name": "Debug bolbhai-checks",
+            "target": "bolbhai-checks",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug bolbhai-checks"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:bolBhAI}",
+            "name": "Release bolbhai-checks",
+            "target": "bolbhai-checks",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release bolbhai-checks"
+        }
+    ]
+}

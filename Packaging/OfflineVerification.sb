@@ -1,0 +1,5 @@
+(version 1)
+(allow default)
+(deny network-outbound)
+; sandbox-exec uses the special host keyword localhost for loopback IP ranges.
+(allow network-outbound (remote ip "localhost:*"))
