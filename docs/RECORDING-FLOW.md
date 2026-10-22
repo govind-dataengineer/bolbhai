@@ -17,23 +17,23 @@ sequenceDiagram
 
     You->>UI: Click Start or press shortcut
     UI->>App: toggle()
-    App->>App: Reject overlapping sessions; capture target app/field
-    App->>App: Snapshot preferences; configure SpeechRouter
+    App->>App: Reject overlapping sessions, capture target app/field
+    App->>App: Snapshot preferences, configure SpeechRouter
     Note over App: Select worker service or CLI fallback<br/>No new Whisper process/model load yet
     App->>Session: begin(speech, cleanup, clean, dictionary)
-    Session->>Session: New generation ID; clear old result; validate configuration
+    Session->>Session: New generation ID, clear old result, validate configuration
     Session->>Adapter: start()
     Adapter->>Audio: requestPermission()
     Audio-->>Adapter: Microphone permission result
-    Adapter->>Adapter: Check cancellation; resolve selected microphone
+    Adapter->>Adapter: Check cancellation, resolve selected microphone
     Adapter->>Audio: start(deviceID:)
     Audio->>Audio: Create AVAudioEngine and private recording.caf
-    Audio->>Audio: Install audio tap; start engine
+    Audio->>Audio: Install audio tap, start engine
     Audio-->>Adapter: Recording file URL
     Adapter-->>Session: Recording file URL
     Session->>Session: state = recording
     Session-->>App: Published state change
-    App->>App: Show overlay; begin five-minute recording limit
+    App->>App: Show overlay, begin five-minute recording limit
     loop While you speak
         Audio->>Audio: Microphone buffers → RecordingSink → recording.caf
     end
@@ -62,23 +62,23 @@ sequenceDiagram
     Session->>Audio: stop()
     Audio->>Audio: Stop engine, remove tap, close audio file
     Audio-->>Session: Completed recording.caf URL
-    Session->>Session: state = transcribing; start timer
+    Session->>Session: state = transcribing, start timer
     Session->>Speech: transcribe(audio, configuration)
     Speech->>Prep: convert(audio, temporary directory)
     Prep->>Prep: afconvert → mono 16 kHz 16-bit speech.wav
     Prep->>Prep: Validate duration and amplitude
     Prep-->>Speech: Validated WAV URL
     alt First request or worker/model changed
-        Speech->>Worker: Launch on loopback; load Whisper model
+        Speech->>Worker: Launch on loopback, load Whisper model
         Speech->>Worker: Wait for health readiness
     else Existing healthy worker
         Note over Speech,Worker: Reuse resident model
     end
     Speech->>Worker: POST WAV to private /inference route
     Worker-->>Speech: JSON containing raw transcript
-    Speech->>Speech: Validate response; remove temporary WAV directory
+    Speech->>Speech: Validate response, remove temporary WAV directory
     Speech-->>Session: Raw text
-    Session->>Session: Reject cancelled/stale result; publish rawTranscript
+    Session->>Session: Reject cancelled/stale result, publish rawTranscript
 ```
 
 `SpeechRouter` lives in `AppModel.swift`. It implements `TranscriptionService`, the protocol declared in `Transcription.swift`, and normally delegates to `PersistentWhisperService` in `WhisperWorker.swift`.
@@ -99,7 +99,7 @@ sequenceDiagram
     participant History as HistoryStore in Storage.swift
 
     alt Verbatim mode
-        Session->>Session: Final text = raw transcript; no dictionary edits
+        Session->>Session: Final text = raw transcript, no dictionary edits
     else Clean mode
         Session->>Session: state = cleaning
         Session->>Clean: clean(raw, configuration)
@@ -114,21 +114,21 @@ sequenceDiagram
             Session->>Session: Apply explicit dictionary mappings
         else Cleanup fails or candidate rejected
             Clean-->>Session: Error
-            Session->>Session: Final text = raw; explain fallback
+            Session->>Session: Final text = raw, explain fallback
         end
     end
     Session->>Session: Reject cancelled/stale result
-    Session->>Session: Publish raw/final text and timings; state = ready
+    Session->>Session: Publish raw/final text and timings, state = ready
     Session-->>App: onReady(result) → completed(result)
-    App->>App: Hide overlay; start completion task
+    App->>App: Hide overlay, start completion task
     opt Automatic insertion enabled
         App->>Insert: insert(final, remembered target, fallback preference)
         Insert->>Insert: Recheck focused app/field, permissions and field support
-        Insert->>Insert: Request AX edit or eligible clipboard paste; otherwise manual guidance
+        Insert->>Insert: Request AX edit or eligible clipboard paste, otherwise manual guidance
         Insert-->>App: Insertion request or manual-copy status
     end
     App->>History: append(raw, final, enabled: historyEnabled)
-    Note over History: Save only if enabled; otherwise clear any saved history
+    Note over History: Save only if enabled, otherwise clear any saved history
     Note over Session: Processing task's defer removes original recording
 ```
 
